@@ -9,88 +9,60 @@
 <body>
   <!-- this gives a direct link to the source code for the vue framework-->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
-  <div id="app">
-
-    <button @click="showCheckout">
-      <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-      Checkout ({{cartItemCount}})  
-    </button>
-
-    <main>
-      <div v-if="showProduct">
-
-        <h1 v-text="sitename"> </h1>
-
-        <figure>
-          <img v-bind:src="product.image" width = 300>
-        </figure>
-
-        <h2 v-text="product.title"> </h2>
-
-        <p v-text="product.description"> </p>
-
-        <p> Price: ${{product.price}} </p>
-
-        <p> {{product.availableInventory}} available. </p>
-
-        <button v-on:click="addItem()" v-show="canAddToCart">
-          Add to cart 
-        </button>
-
-      </div>
-
-      <div v-else>
-
-        <h1> Checkout Page </h1>
-
-        <p> Items in cart: {{cartItemCount}} </p>
-
-      </div>
-
-    </main>
-  </div>
+</head>
+<body>
 
   <script type="module">
-    const {createApp} = Vue
-    const petstore = createApp({
+    const {createApp} = Vue 
+    const myApp = createApp ({
       data() {
         return{
-          sitename: "Vue.js Pet Depot",
-          showProduct: true,
-          product: {
-            id: 1001,
-            title: "Cat Food, 25lb bag",
-            description: "A 25 pound bag of irresistible, " + "organic goodness for your cat.",
-              price: 200,
-              image: "/cst3144-example/Images/catFood.jpg",
-              availableInventory: 5
+          sitename: "Subject",
+          subjectDetails: {
+            subject: "Computer Science",
+            id: "1001",
+            location: "Hendon",
+            price: "$10",
+            image: "/cst3144-example/Images/computer_science.jpg",
+            alt: "Computer Science",
+            availability: 4
           },
           cart:[]
         }
       },
 
-      computed:{
-        cartItemCount(){
-          return this.cart.length;
-        },
-
-        canAddToCart(){
-          return this.product.availableInventory > this.cartItemCount;
+      computed: {
+        canAddToCart() {
+          return this.subjectDetails.availability > 0
         }
       },
-      
-      methods:{
-        addItem(){
-          this.cart.push(this.product.id);
-        },
 
-        showCheckout(){
-          this.showProduct = this.showProduct ? false : true;
+      methods: {
+        addToCart() {
+          this.cart.push(this.subjectDetails.id);
+          this.subjectDetails.availability --
         }
       }
     })
-    petstore.mount('#app')
+    myApp.mount('#div1')
   </script>
+
+  <div id="div1">
+    <h1> After School Club </h1>
+
+    <img v-bind:src="subjectDetails.image" v-bind:alt="alt" width="250">
+
+    <h3> Subject </h3>
+
+    <p> {{subjectDetails.subject}} </p>
+    <p> ID: {{subjectDetails.id}} </p>
+    <p> {{subjectDetails.location}} </p>
+    <p> {{subjectDetails.price}} </p>
+    <p> {{subjectDetails.availability}} slots availables </p>
+
+    <button v-on:click = "addToCart" v-show = "addToCart">
+      Add to cart
+    </button>
+  </div>
 </body>
 </html>
