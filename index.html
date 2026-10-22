@@ -7,49 +7,52 @@
   <title> cst3144-example </title>
 </head>
 <body>
-  <!-- this gives a direct link to the source code for the vue framework-->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-</head>
-<body>
 
+  <!-- this gives a direct link to the source code for the vue framework--> 
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <!--  +  +  -->
   <script type="module">
+
     const {createApp} = Vue 
     const myApp = createApp ({
+      //data stores the information used by the webpages
       data() {
         return{
           sitename: "Subject",
           subjectDetails: {
             subject: "Computer Science",
-            id: "1001",
+            id: "1001", //give the lesson an ID number
             location: "Hendon",
             price: "$10",
             image: "/cst3144-example/Images/computer_science.jpg",
             alt: "Computer Science",
-            availability: 4
+            availability: 4, //add an availability field that tracks how many slots are available
           },
-          cart:[],
-          displayCart: false
+          cart:[], // stores the ID of lessons added to the cart
+          displayCart: false // a boolean variable that controls wheter the cart is displayed 
         }
       },
-
+      
+      
       computed: {
         canAddToCart() {
-          return this.subjectDetails.availability > 0;
+          return this.subjectDetails.availability > 0; //check whether at least one lesson slot is available
         },
 
         numberOfItems() {
-          return this.cart.length;
+          return this.cart.length; // returns the number of items currently in the cart
         }
       },
 
       methods: {
         addToCart() {
-          this.cart.push(this.subjectDetails.id);
-          this.subjectDetails.availability --;
+          this.cart.push(this.subjectDetails.id); //add the lesson's ID to the cart
+          this.subjectDetails.availability --; //reduces the available the lesson slots by 1
         },
 
         showCheckout() {
-          this.displayCart = this.displayCart ? false : true ;
+          this.displayCart = this.displayCart ? false : true ; // toggles between displaying the lessons information and chekout placeholder
         }
       }
     })
@@ -57,14 +60,20 @@
   </script>
 
 <div id="div1">
+  <!--enable only when there is at least one item in the cart and checkout btn to display the nbr of items in the cart-->
 
-  <button @click = "showCheckout" v-bind:disabled = "numberOfItems == 0" > Checkout {{numberOfItems}} </button>
+  <button 
+  @click = "showCheckout" 
+  v-bind:disabled = "numberOfItems == 0" >
+    Checkout {{numberOfItems}}
+  </button> 
 
   <main>
-    <div v-if = "!displayCart">
+    <div v-if = "!displayCart"> 
+      <!--the lessons info is displayed when displayCart is false-->
 
       <h1> After School Club </h1>
-      <img v-bind:src="subjectDetails.image" v-bind:alt="alt" width="250">
+      <img v-bind:src="subjectDetails.image" v-bind:alt="subjectDetails.alt" width="250">
       <h3> Subject </h3>
       <p> {{subjectDetails.subject}} </p>
       <p> ID: {{subjectDetails.id}} </p>
@@ -72,12 +81,13 @@
       <p> {{subjectDetails.price}} </p>
       <p> {{subjectDetails.availability}} slots availables </p>
 
-      <button v-on:click = "addToCart" v-show = "addToCart">
+      <button v-on:click = "addToCart" v-show = "canAddToCart"> <!-- bind the method canAddToCart to the button add to cart -->
         Add to cart
       </button>
   </div>
 
   <div v-else>
+    <!--display a cheeckout placeholder when displayCart is true-->
     <p> Check out </p>
   </div>
   </main>
