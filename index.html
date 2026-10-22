@@ -81,7 +81,7 @@
       <p> {{subjectDetails.price}} </p>
       <p> {{subjectDetails.availability}} slots availables </p>
 
-      <button v-on:click = "addToCart" v-show = "canAddToCart"> <!-- bind the method canAddToCart to the button add to cart -->
+      <button v-on:click = "addToCart" v-bind:disabled = "!canAddToCart"> <!-- bind the method canAddToCart to the button add to cart -->
         Add to cart
       </button>
   </div>
