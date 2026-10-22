@@ -27,42 +27,60 @@
             alt: "Computer Science",
             availability: 4
           },
-          cart:[]
+          cart:[],
+          displayCart: false
         }
       },
 
       computed: {
         canAddToCart() {
           return this.subjectDetails.availability > 0;
+        },
+
+        numberOfItems() {
+          return this.cart.length;
         }
       },
 
       methods: {
         addToCart() {
           this.cart.push(this.subjectDetails.id);
-          this.subjectDetails.availability --
+          this.subjectDetails.availability --;
+        },
+
+        showCheckout() {
+          this.displayCart = this.displayCart ? false : true ;
         }
       }
     })
     myApp.mount('#div1')
   </script>
 
-  <div id="div1">
-    <h1> After School Club </h1>
+<div id="div1">
 
-    <img v-bind:src="subjectDetails.image" v-bind:alt="alt" width="250">
+  <button @click = "showCheckout" v-bind:disabled = "numberOfItems == 0" > Checkout {{numberOfItems}} </button>
 
-    <h3> Subject </h3>
+  <main>
+    <div v-if = "!displayCart">
 
-    <p> {{subjectDetails.subject}} </p>
-    <p> ID: {{subjectDetails.id}} </p>
-    <p> {{subjectDetails.location}} </p>
-    <p> {{subjectDetails.price}} </p>
-    <p> {{subjectDetails.availability}} slots availables </p>
+      <h1> After School Club </h1>
+      <img v-bind:src="subjectDetails.image" v-bind:alt="alt" width="250">
+      <h3> Subject </h3>
+      <p> {{subjectDetails.subject}} </p>
+      <p> ID: {{subjectDetails.id}} </p>
+      <p> {{subjectDetails.location}} </p>
+      <p> {{subjectDetails.price}} </p>
+      <p> {{subjectDetails.availability}} slots availables </p>
 
-    <button v-on:click = "addToCart" v-show = "addToCart">
-      Add to cart
-    </button>
+      <button v-on:click = "addToCart" v-show = "addToCart">
+        Add to cart
+      </button>
   </div>
+
+  <div v-else>
+    <p> Check out </p>
+  </div>
+  </main>
+</div>
 </body>
 </html>
