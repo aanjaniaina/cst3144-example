@@ -39,7 +39,20 @@
 
     <div v-else>
       <!--display a cheeckout placeholder when displayCart is true-->
-      <p> Check out </p>
+      <p> Checkout </p>
+
+      <!-- input fields to collect customer's information-->
+      <p>First Name: <input v-model="order.firstName"></p>
+      <p>Last Name: <input v-model="order.lastName"></p>
+      <p> Phone Number: <input v-model="order.phoneNumber"></p>
+
+      <!--checkout btn remains disabled until all customer information fields are filled-->
+      <button v-on:click="orderCheckout" v-bind:disabled="!checkCustomer">
+        Check out
+      </button>
+
+      <!-- confirmation message displayed when the order is confirmed-->
+      <p v-if="orderConfirmed"> Your order has been confirmed. </p>
     </div>
 
     </main>
@@ -61,34 +74,46 @@
               image: "/cst3144-example/Images/computer_science.jpg",
               alt: "Computer Science",
               availability: 5 //add an availability field that tracks how many slots are available
+            },
+            {
+              subject: "Mathematics",
+              id: "1002", //give the lesson an ID number
+              location: "Hendon",
+              price: "$20",
+              image: "/cst3144-example/Images/computer_science.jpg",
+              alt: "Mathematics",
+              availability: 5,
+            },
+            {
+              subject: "Physics",
+              id: "1003", //give the lesson an ID number
+              location: "Hendon",
+              price: "$15",
+              image: "/cst3144-example/Images/computer_science.jpg",
+              alt: "Physics",
+              availability: 5,
+            }
+          ],
+          //stores the customers information for order
+          order:{
+            firstName:"",
+            lastName:"",
+            phoneNumber:"",
           },
-          {
-            subject: "Mathematics",
-            id: "1002", //give the lesson an ID number
-            location: "Hendon",
-            price: "$20",
-            image: "/cst3144-example/Images/computer_science.jpg",
-            alt: "Mathematics",
-            availability: 5,
-          },
-          {
-            subject: "Physics",
-            id: "1003", //give the lesson an ID number
-            location: "Hendon",
-            price: "$15",
-            image: "/cst3144-example/Images/computer_science.jpg",
-            alt: "Physics",
-            availability: 5,
-          }
-        ],
           cart:[], // stores the ID of lessons added to the cart
-          displayCart: false // a boolean variable that controls wheter the cart is displayed 
+          displayCart: false, // a boolean variable that controls wheter the cart is displayed
+          orderConfirmed:false, //to check if the order has been confirmed
         }
       },
       
       computed: {
         numberOfItems() {
           return this.cart.length; // returns the number of lessonIDs currently stored in the cart
+        },
+
+        //check that customer has entered all order information
+        checkCustomer(){
+          return this.order.firstName !== "" && this.order.lastName !== "" && this.order.phoneNumber !== "";
         }
       },
 
@@ -104,6 +129,12 @@
 
         showCheckout() {
           this.displayCart = this.displayCart ? false : true ; // toggles between displaying the lessons information and chekout placeholder
+        },
+
+        //run when the customer clicks the checkout btn
+        orderCheckout(){
+          this.orderConfirmed = true; //display the order confirmation message
+          this.cart = []; //empty cart after order is confirmed
         }
       }
     })
