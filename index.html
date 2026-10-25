@@ -11,51 +11,6 @@
   <!-- this gives a direct link to the source code for the vue framework--> 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-  <script type="module">
-    const {createApp} = Vue 
-    const myApp = createApp ({
-      //data stores the information used by the webpages
-      data() {
-        return{
-          sitename: "Subject",
-          subjectDetails: {
-            subject: "Computer Science",
-            id: "1001", //give the lesson an ID number
-            location: "Hendon",
-            price: "$10",
-            image: "/cst3144-example/Images/computer_science.jpg",
-            alt: "Computer Science",
-            availability: 4, //add an availability field that tracks how many slots are available
-          },
-          cart:[], // stores the ID of lessons added to the cart
-          displayCart: false // a boolean variable that controls wheter the cart is displayed 
-        }
-      },
-      
-      computed: {
-        canAddToCart() {
-          return this.subjectDetails.availability > 0; //check whether at least one lesson slot is available
-        },
-
-        numberOfItems() {
-          return this.cart.length; // returns the number of items currently in the cart
-        }
-      },
-
-      methods: {
-        addToCart() {
-          this.cart.push(this.subjectDetails.id); //add the lesson's ID to the cart
-          this.subjectDetails.availability --; //reduces the available the lesson slots by 1
-        },
-
-        showCheckout() {
-          this.displayCart = this.displayCart ? false : true ; // toggles between displaying the lessons information and chekout placeholder
-        }
-      }
-    })
-    myApp.mount('#div1')
-  </script>
-
   <div id="div1">
 
     <!--enable only when there is at least one item in the cart and checkout btn to display the nbr of items in the cart-->
@@ -64,19 +19,20 @@
     </button> 
 
     <main>
-      <div v-if = "!displayCart"> 
+      <div v-if = "!displayCart" v-for="subjects in subjectDetails"> 
         <!--the lessons info is displayed when displayCart is false-->
 
         <h1> After School Club </h1>
-        <img v-bind:src="subjectDetails.image" v-bind:alt="subjectDetails.alt" width="250">
+        <img v-bind:src="subjects.image" v-bind:alt="subjects.alt" width="250">
         <h3> Subject </h3>
-        <p> {{subjectDetails.subject}} </p>
-        <p> ID: {{subjectDetails.id}} </p>
-        <p> {{subjectDetails.location}} </p>
-        <p> {{subjectDetails.price}} </p>
-        <p> {{subjectDetails.availability}} slots availables </p>
+        <p> {{subjects.subject}} </p>
+        <p> ID: {{subjects.id}} </p>
+        <p> {{subjects.location}} </p>
+        <p> {{subjects.price}} </p>
+        <p> {{subjects.availability}} slots availables </p>
 
-        <button v-on:click = "addToCart" v-bind:disabled = "!canAddToCart"> <!-- bind the method canAddToCart to the button add to cart -->
+        <!-- pass the elected lesson to addToCart and disable the btn when there is no slot available anymore-->
+        <button v-on:click = "addToCart(subjects)" v-bind:disabled = "!canAddToCart(subjects)"> <!-- bind the method canAddToCart to the button add to cart -->
           Add to cart
         </button>
     </div>
@@ -88,5 +44,72 @@
 
     </main>
   </div>
+
+  <script type="module">
+    const {createApp} = Vue 
+    const myApp = createApp ({
+      //data stores the information used by the webpages
+      data() {
+        return{
+          sitename: "Subject",
+          subjectDetails:[
+            {
+              subject: "Computer Science",
+              id: "1001", //give the lesson an ID number
+              location: "Hendon",
+              price: "$10",
+              image: "/cst3144-example/Images/computer_science.jpg",
+              alt: "Computer Science",
+              availability: 5 //add an availability field that tracks how many slots are available
+          },
+          {
+            subject: "Mathematics",
+            id: "1002", //give the lesson an ID number
+            location: "Hendon",
+            price: "$20",
+            image: "/cst3144-example/Images/computer_science.jpg",
+            alt: "Mathematics",
+            availability: 5,
+          },
+          {
+            subject: "Physics",
+            id: "1003", //give the lesson an ID number
+            location: "Hendon",
+            price: "$15",
+            image: "/cst3144-example/Images/computer_science.jpg",
+            alt: "Physics",
+            availability: 5,
+          }
+        ],
+          cart:[], // stores the ID of lessons added to the cart
+          displayCart: false // a boolean variable that controls wheter the cart is displayed 
+        }
+      },
+      
+      computed: {
+        numberOfItems() {
+          return this.cart.length; // returns the number of lessonIDs currently stored in the cart
+        }
+      },
+
+      methods: {
+        addToCart(lesson) {
+          this.cart.push(lesson.id); //add the selected lesson's ID to the cart
+          lesson.availability --; //reduces the available slots by 1
+        },
+
+        canAddToCart(lesson) {
+          return lesson.availability > 0; //check whether teh selected lesson has an available slot remaining
+        },
+
+        showCheckout() {
+          this.displayCart = this.displayCart ? false : true ; // toggles between displaying the lessons information and chekout placeholder
+        }
+      }
+    })
+    myApp.mount('#div1')
+  </script>
+
+  
 </body>
 </html>
