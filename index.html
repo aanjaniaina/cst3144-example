@@ -6,14 +6,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title> cst3144-example </title>
 </head>
-<body>
 
+<body>
   <!-- this gives a direct link to the source code for the vue framework--> 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-  <!--  +  +  -->
   <script type="module">
-
     const {createApp} = Vue 
     const myApp = createApp ({
       //data stores the information used by the webpages
@@ -33,7 +31,6 @@
           displayCart: false // a boolean variable that controls wheter the cart is displayed 
         }
       },
-      
       
       computed: {
         canAddToCart() {
@@ -59,38 +56,37 @@
     myApp.mount('#div1')
   </script>
 
-<div id="div1">
-  <!--enable only when there is at least one item in the cart and checkout btn to display the nbr of items in the cart-->
+  <div id="div1">
 
-  <button 
-  @click = "showCheckout" 
-  v-bind:disabled = "numberOfItems == 0" >
-    Checkout {{numberOfItems}}
-  </button> 
+    <!--enable only when there is at least one item in the cart and checkout btn to display the nbr of items in the cart-->
+    <button @click = "showCheckout" v-bind:disabled = "numberOfItems == 0" >
+      Checkout {{numberOfItems}}
+    </button> 
 
-  <main>
-    <div v-if = "!displayCart"> 
-      <!--the lessons info is displayed when displayCart is false-->
+    <main>
+      <div v-if = "!displayCart"> 
+        <!--the lessons info is displayed when displayCart is false-->
 
-      <h1> After School Club </h1>
-      <img v-bind:src="subjectDetails.image" v-bind:alt="subjectDetails.alt" width="250">
-      <h3> Subject </h3>
-      <p> {{subjectDetails.subject}} </p>
-      <p> ID: {{subjectDetails.id}} </p>
-      <p> {{subjectDetails.location}} </p>
-      <p> {{subjectDetails.price}} </p>
-      <p> {{subjectDetails.availability}} slots availables </p>
+        <h1> After School Club </h1>
+        <img v-bind:src="subjectDetails.image" v-bind:alt="subjectDetails.alt" width="250">
+        <h3> Subject </h3>
+        <p> {{subjectDetails.subject}} </p>
+        <p> ID: {{subjectDetails.id}} </p>
+        <p> {{subjectDetails.location}} </p>
+        <p> {{subjectDetails.price}} </p>
+        <p> {{subjectDetails.availability}} slots availables </p>
 
-      <button v-on:click = "addToCart" v-bind:disabled = "!canAddToCart"> <!-- bind the method canAddToCart to the button add to cart -->
-        Add to cart
-      </button>
+        <button v-on:click = "addToCart" v-bind:disabled = "!canAddToCart"> <!-- bind the method canAddToCart to the button add to cart -->
+          Add to cart
+        </button>
+    </div>
+
+    <div v-else>
+      <!--display a cheeckout placeholder when displayCart is true-->
+      <p> Check out </p>
+    </div>
+
+    </main>
   </div>
-
-  <div v-else>
-    <!--display a cheeckout placeholder when displayCart is true-->
-    <p> Check out </p>
-  </div>
-  </main>
-</div>
 </body>
 </html>
