@@ -15,7 +15,7 @@
     <div v-if = "displayCart"> 
     <!--the lessons info is displayed when displayCart is true-->
 
-      <h1> After School Club </h1>
+      <h1> {{sitename}} </h1>
 
       <!--enable only when there is at least one item in the cart and checkout btn to display the nbr of items in the cart-->
       <button @click = "showCheckout" v-bind:disabled = "numberOfItems == 0" >
@@ -25,7 +25,6 @@
 
       <div v-for="subjects in subjectDetails"> 
         <img v-bind:src="subjects.image" v-bind:alt="subjects.alt" width="250">
-        <h3> Subject </h3>
         <p> {{subjects.subject}} </p>
         <p> ID: {{subjects.id}} </p>
         <p> {{subjects.location}} </p>
@@ -82,7 +81,7 @@
       //data stores the information used by the webpages
       data() {
         return{
-          sitename: "Subject",
+          sitename: "After School Club",
           subjectDetails:[
             {
               subject: "Computer Science",
@@ -98,16 +97,16 @@
               id: "1002", //give the lesson an ID number
               location: "Hendon",
               price: "$20",
-              image: "/cst3144-example/Images/computer_science.jpg",
+              image: "/cst3144-example/Images/mathematics.jpg",
               alt: "Mathematics",
               availability: 5,
             },
             {
-              subject: "Physics",
+              subject: "Science",
               id: "1003", //give the lesson an ID number
               location: "Hendon",
               price: "$15",
-              image: "/cst3144-example/Images/computer_science.jpg",
+              image: "/cst3144-example/Images/science.jpg",
               alt: "Physics",
               availability: 5,
             }
