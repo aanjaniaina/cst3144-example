@@ -12,17 +12,18 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <div id="div1">
+    <div v-if = "displayCart"> 
+    <!--the lessons info is displayed when displayCart is true-->
 
-    <!--enable only when there is at least one item in the cart and checkout btn to display the nbr of items in the cart-->
-    <button @click = "showCheckout" v-bind:disabled = "numberOfItems == 0" >
-      Checkout {{numberOfItems}}
-    </button> 
+      <h1> After School Club </h1>
 
-    <main>
-      <div v-if = "!displayCart" v-for="subjects in subjectDetails"> 
-        <!--the lessons info is displayed when displayCart is false-->
+      <!--enable only when there is at least one item in the cart and checkout btn to display the nbr of items in the cart-->
+      <button @click = "showCheckout" v-bind:disabled = "numberOfItems == 0" >
+        Checkout {{numberOfItems}}
+      </button>
+      <br><br>
 
-        <h1> After School Club </h1>
+      <div v-for="subjects in subjectDetails"> 
         <img v-bind:src="subjects.image" v-bind:alt="subjects.alt" width="250">
         <h3> Subject </h3>
         <p> {{subjects.subject}} </p>
@@ -35,16 +36,35 @@
         <button v-on:click = "addToCart(subjects)" v-bind:disabled = "!canAddToCart(subjects)"> <!-- bind the method canAddToCart to the button add to cart -->
           Add to cart
         </button>
+        <br><br>
+      </div>
     </div>
 
     <div v-else>
-      <!--display a cheeckout placeholder when displayCart is true-->
+      <!--display a checkout placeholder when displayCart is true-->
       <p> Checkout </p>
 
+      <button v-on:click="showCheckout"> Return to previous page </button>
+
       <!-- input fields to collect customer's information-->
-      <p>First Name: <input v-model="order.firstName"></p>
-      <p>Last Name: <input v-model="order.lastName"></p>
-      <p> Phone Number: <input v-model="order.phoneNumber"></p>
+      <p>First Name: <input v-model="order.firstName"> {{order.firstName}} </p>
+      <p>Last Name: <input v-model="order.lastName"> {{order.lastName}} </p>
+      <p> Phone Number: <input v-model="order.phoneNumber"> {{order.phoneNumber}} </p>
+
+      <h4> Summary </h4>
+      <!-- v-for loop to display the lessons in the cart -->
+      <div v-for="subjects in subjectDetails">
+        <!-- v-if to dislay a lesson that appears in the cart -->
+        <div v-if = "cartLessonCount(subjects.id) > 0">
+          {{subjects.subject}}:
+          {{cartLessonCount(subjects.id)}}
+
+          <!-- btn to remove the selected lesson from the cart-->
+          <button v-on:click="removeLesson(subjects)">
+            Remove
+          </button>
+        </div>
+      </div>
 
       <!--checkout btn remains disabled until all customer information fields are filled-->
       <button v-on:click="orderCheckout" v-bind:disabled="!checkCustomer">
@@ -54,8 +74,6 @@
       <!-- confirmation message displayed when the order is confirmed-->
       <p v-if="orderConfirmed"> Your order has been confirmed. </p>
     </div>
-
-    </main>
   </div>
 
   <script type="module">
@@ -101,7 +119,7 @@
             phoneNumber:"",
           },
           cart:[], // stores the ID of lessons added to the cart
-          displayCart: false, // a boolean variable that controls wheter the cart is displayed
+          displayCart: true, // a boolean variable that controls wheter the cart is displayed
           orderConfirmed:false, //to check if the order has been confirmed
         }
       },
@@ -124,7 +142,7 @@
         },
 
         canAddToCart(lesson) {
-          return lesson.availability > 0; //check whether teh selected lesson has an available slot remaining
+          return lesson.availability > 0; //check whether the selected lesson has an available slot remaining
         },
 
         showCheckout() {
@@ -135,7 +153,18 @@
         orderCheckout(){
           this.orderConfirmed = true; //display the order confirmation message
           this.cart = []; //empty cart after order is confirmed
-        }
+        },
+
+        //count how many times the id of a lesson appears in the cart
+        cartLessonCount(id){
+          return this.cart.filter(lesson => lesson === id).length; 
+        },
+
+        //remove lesson from the cart and restore the availability slot
+        removeLesson(lesson){
+          this.cart.splice(lesson, 1);// remove one lesson from the cart
+          lesson.availability++; //restore available slot for the removed lesson
+        },
       }
     })
     myApp.mount('#div1')
