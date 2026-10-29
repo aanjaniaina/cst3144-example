@@ -97,31 +97,16 @@
           sitename: "After School Club",
           subjectDetails:[
             {
-              subject: "Computer Science",
-              id: "1001", //give the lesson an ID number
-              location: "Hendon",
-              price: 10,
               image: "/cst3144-example/Images/computer_science.jpg",
               alt: "Computer Science",
-              availability: 5 //add an availability field that tracks how many slots are available
             },
             {
-              subject: "Mathematics",
-              id: "1002", //give the lesson an ID number
-              location: "Dubai",
-              price: 20,
               image: "/cst3144-example/Images/mathematics.jpg",
               alt: "Mathematics",
-              availability: 5,
             },
             {
-              subject: "Science",
-              id: "1003", //give the lesson an ID number
-              location: "Mauritius",
-              price: 15,
               image: "/cst3144-example/Images/science.jpg",
               alt: "Physics",
-              availability: 5,
             }
           ],
           //stores the customers information for order
@@ -136,6 +121,10 @@
           sortType: "price", //sort by price
           sortIncreasing: true, //boolean for increasing or decreasing order
         }
+      },
+
+      created(){
+        this.fetchData()
       },
       
       computed: {
@@ -193,6 +182,13 @@
       },
 
       methods: {
+        async fetchData(){
+          const url = "http://localhost:3002/";
+          let response = await fetch (url);
+          this.subjectDetails = await response.json();
+        },
+
+
         addToCart(lesson) {
           this.cart.push(lesson.id); //add the selected lesson's ID to the cart
           lesson.availability --; //reduces the available slots by 1
