@@ -21,14 +21,28 @@
       <button @click = "showCheckout" v-bind:disabled = "numberOfItems == 0" >
         Shopping Cart {{numberOfItems}}
       </button>
-      <br><br>
 
-      <div v-for="subjects in subjectDetails"> 
+      <p> Sort by: 
+          <input type="radio" v-model="sortType" value="price"> Price
+          <input type="radio" v-model="sortType" value="availability"> Availability
+          <input type="radio" v-model="sortType" value="location"> Location
+          <input type="radio" v-model="sortType" value="subject"> Subject
+        </p>
+
+        <p> Order by: 
+        <select v-model="sortIncreasing">
+          <option :value = "true"> Increasing </option>
+          <option :value = "false"> Decreasing </option>
+        </select>
+        </p>
+
+      <div v-for="subjects in sortedLessons"> 
+
         <img v-bind:src="subjects.image" v-bind:alt="subjects.alt" width="250">
         <p> {{subjects.subject}} </p>
         <p> ID: {{subjects.id}} </p>
         <p> {{subjects.location}} </p>
-        <p> {{subjects.price}} </p>
+        <p> ${{subjects.price}} </p>
         <p> {{subjects.availability}} slots availables </p>
 
         <!-- pass the elected lesson to addToCart and disable the btn when there is no slot available anymore-->
@@ -86,7 +100,7 @@
               subject: "Computer Science",
               id: "1001", //give the lesson an ID number
               location: "Hendon",
-              price: "$10",
+              price: 10,
               image: "/cst3144-example/Images/computer_science.jpg",
               alt: "Computer Science",
               availability: 5 //add an availability field that tracks how many slots are available
@@ -94,8 +108,8 @@
             {
               subject: "Mathematics",
               id: "1002", //give the lesson an ID number
-              location: "Hendon",
-              price: "$20",
+              location: "Dubai",
+              price: 20,
               image: "/cst3144-example/Images/mathematics.jpg",
               alt: "Mathematics",
               availability: 5,
@@ -103,8 +117,8 @@
             {
               subject: "Science",
               id: "1003", //give the lesson an ID number
-              location: "Hendon",
-              price: "$15",
+              location: "Mauritius",
+              price: 15,
               image: "/cst3144-example/Images/science.jpg",
               alt: "Physics",
               availability: 5,
@@ -119,6 +133,8 @@
           cart:[], // stores the ID of lessons added to the cart
           displayLessonPage: true, // a boolean variable that controls wheter the cart is displayed
           orderConfirmed:false, //to check if the order has been confirmed
+          sortType: "price", //sort by price
+          sortIncreasing: true, //boolean for increasing or decreasing order
         }
       },
       
@@ -130,7 +146,50 @@
         //check that customer has entered all order information
         checkCustomer(){
           return this.order.firstName !== "" && this.order.lastName !== "" && this.order.phoneNumber !== "";
-        }
+        },
+
+        //function to sort the lessons
+        sortedLessons: function(){
+          function compare(a,b){
+
+            //sort lessons by price
+            if(this.sortType == "price"){
+              if(a.price > b.price) return 1;
+              if(a.price < b.price) return -1;
+              return 0;
+            }
+
+            //sort lessons by availability
+            if(this.sortType == "availability"){
+              if(a.availability > b.availability) return 1;
+              if(a.availability < b.availability) return -1;
+              return 0;
+            }
+
+            //sort lessons by location
+            if(this.sortType == "location"){
+              if(a.location > b.location) return 1;
+              if(a.location < b.location) return -1;
+              return 0;
+            }
+
+            //sort lessons by subject
+            if(this.sortType == "subject"){
+              if(a.subject > b.subject) return 1;
+              if(a.subject < b.subject) return -1;
+              return 0;
+            }
+          }
+
+          //sort the lessons using the compare function and store the result in sorted
+          const sorted = this.subjectDetails.sort(compare.bind(this));
+
+          //if sortIncreasing is false, reverse the order to decreasing else increasing
+          if(this.sortIncreasing == false){
+            sorted.reverse();
+          }
+          return sorted; //return the sorted lessons to display
+        },
       },
 
       methods: {
